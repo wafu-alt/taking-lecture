@@ -25,7 +25,7 @@ function displayItems(items) {
   const html = (container.innerHTML = items
     .map((item) => createHTMLString(item))
     .join(""));
-  console.log(html);
+  // console.log(html);
 }
 
 // create HTML list item from the given data item
@@ -40,17 +40,41 @@ function createHTMLString(item) {
   //data.json에 보면 image=경로, type, gender, size 는 키에 해당함
 }
 
+function onButtonClick(event, items) {
+  // console.log(event.target.dataset.key);
+  // console.log(event.target.dataset.value);
+  const dataset = event.target.dataset;
+  const key = dataset.key;
+  const value = dataset.value;
+
+  if (key == null || value == null) {
+    return;
+  }
+
+  const filtered = items.filter((item) => item[key] === value);
+  console.log(filtered);
+  displayItems(filtered);
+}
+
+//버튼이 클릭 되었을 때 동작
+function setEventListeners(items) {
+  const logo = document.querySelector(".logo");
+  const buttons = document.querySelector(".buttons");
+  logo.addEventListener("click", () => displayItems(items));
+  buttons.addEventListener("click", (event) => onButtonClick(event, items));
+}
+
 //main
 // json을 동적으로 읽어와서 item 전달
 // 프로미스가 리턴이 되면 > html에 아이템을 보여주고, 버튼을 클릭했을때 필터링 되게함
 
 loadItems() /* 1.loaditems로 items을 동적으로 받아옴 */
   .then((items) => {
-    console.log(items);
+    // console.log(items);
 
     displayItems(items);
     /* 2. 받아온 items을 displayitems함수에 items를 호출해서 함수 안에서 const container 변수에 inner.HTML로 업데이트 함  업데이트는 받아온 items 오브젝트를 li배열 문자열로 변환하고 그것을 하나의 문자열로 합침 */
 
-    // setEventListeners(items);
+    setEventListeners(items);
   })
   .catch(console.log);
